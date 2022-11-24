@@ -2,13 +2,14 @@ import React, { useState } from "react"
 import { Button, Col, Form, Row, Stack } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import ReactSelect from "react-select"
-import { Tag } from "./App"
+import { Note, Tag } from "./App"
 
 type NoteListProps = {
 	availableTags: Tag[]
+	filteredNote: Note[]
 }
 
-function NoteList({ availableTags }: NoteListProps) {
+function NoteList({ availableTags, filteredNote }: NoteListProps) {
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([])
 	const [title, setTitle] = useState<string>()
 	return (
@@ -64,8 +65,8 @@ function NoteList({ availableTags }: NoteListProps) {
 			</Form>
 
 			<Row xs={1} sm={2} lg={3} xl={4} className="g-3">
-				{filteredNote.map((note) => {
-					return <NoteCard note={note} />
+				{filteredNote.map((note: Note) => {
+					return <div>{note.title}</div>
 				})}
 			</Row>
 		</>
