@@ -64,9 +64,13 @@ function App() {
 			<Routes>
 				<Route
 					path="/"
+<<<<<<< HEAD
 					element={
 						<NoteList availableTags={tags} filteredNote={notesWithTags} />
 					}
+=======
+					element={<NoteList availableTags={tags} notes={notesWithTags} />}
+>>>>>>> 978658e7c57743f3bb814e84acc0f5961ad930a7
 				/>
 				<Route
 					path="/new"

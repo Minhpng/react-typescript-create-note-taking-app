@@ -1,8 +1,9 @@
-import React, { useState } from "react"
-import { Button, Col, Form, Row, Stack } from "react-bootstrap"
+import React, { useMemo, useState } from "react"
+import { Badge, Button, Card, Col, Form, Row, Stack } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import ReactSelect from "react-select"
 import { Note, Tag } from "./App"
+<<<<<<< HEAD
 
 type NoteListProps = {
 	availableTags: Tag[]
@@ -10,8 +11,41 @@ type NoteListProps = {
 }
 
 function NoteList({ availableTags, filteredNote }: NoteListProps) {
+=======
+
+import styles from "./NoteList.module.css"
+
+type SimpliedNote = {
+	id: string
+	title: string
+	tags: Tag[]
+}
+
+type NoteListProps = {
+	availableTags: Tag[]
+	notes: SimpliedNote[]
+}
+
+function NoteList({ availableTags, notes }: NoteListProps) {
+>>>>>>> 978658e7c57743f3bb814e84acc0f5961ad930a7
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([])
-	const [title, setTitle] = useState<string>()
+	const [title, setTitle] = useState<string>("")
+
+	console.log(notes)
+
+	const filteredNotes = useMemo(() => {
+		return notes.filter((note) => {
+			return (
+				(title === "" ||
+					note.title.toLowerCase().includes(title.toLowerCase())) &&
+				(selectedTags.length === 0 ||
+					selectedTags.every((tag) =>
+						note.tags.some((noteTag) => tag.id === noteTag.id)
+					))
+			)
+		})
+	}, [title, selectedTags, notes])
+
 	return (
 		<>
 			<Row className="align-items-center mb-4">
@@ -65,8 +99,17 @@ function NoteList({ availableTags, filteredNote }: NoteListProps) {
 			</Form>
 
 			<Row xs={1} sm={2} lg={3} xl={4} className="g-3">
+<<<<<<< HEAD
 				{filteredNote.map((note: Note) => {
 					return <div>{note.title}</div>
+=======
+				{filteredNotes.map((note) => {
+					return (
+						<Col key={note.id}>
+							<NoteCard id={note.id} title={note.title} tags={note.tags} />
+						</Col>
+					)
+>>>>>>> 978658e7c57743f3bb814e84acc0f5961ad930a7
 				})}
 			</Row>
 		</>
@@ -74,3 +117,35 @@ function NoteList({ availableTags, filteredNote }: NoteListProps) {
 }
 
 export default NoteList
+
+function NoteCard({ id, title, tags }: SimpliedNote) {
+	return (
+		<Card
+			as={Link}
+			to={`/${id}`}
+			className={`h-100 text-reset text-decoration-none ${styles.card}`}
+		>
+			<Card.Body>
+				<Stack
+					gap={2}
+					className="align-items-center justify-content-center h-100"
+				>
+					<span className="fs-5">{title}</span>
+					{tags.length > 0 && (
+						<Stack
+							gap={1}
+							direction="horizontal"
+							className="justify-content-center flex-wrap"
+						>
+							{tags.map((tag) => (
+								<Badge key={tag.id} className="text-truncate">
+									{tag.label}
+								</Badge>
+							))}
+						</Stack>
+					)}
+				</Stack>
+			</Card.Body>
+		</Card>
+	)
+}
