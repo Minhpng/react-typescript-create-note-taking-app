@@ -3,19 +3,10 @@ import { Badge, Button, Card, Col, Form, Row, Stack } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import ReactSelect from "react-select"
 import { Note, Tag } from "./App"
-<<<<<<< HEAD
-
-type NoteListProps = {
-	availableTags: Tag[]
-	filteredNote: Note[]
-}
-
-function NoteList({ availableTags, filteredNote }: NoteListProps) {
-=======
 
 import styles from "./NoteList.module.css"
 
-type SimpliedNote = {
+type SimplifiedNote = {
 	id: string
 	title: string
 	tags: Tag[]
@@ -23,15 +14,12 @@ type SimpliedNote = {
 
 type NoteListProps = {
 	availableTags: Tag[]
-	notes: SimpliedNote[]
+	notes: SimplifiedNote[]
 }
 
 function NoteList({ availableTags, notes }: NoteListProps) {
->>>>>>> 978658e7c57743f3bb814e84acc0f5961ad930a7
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([])
 	const [title, setTitle] = useState<string>("")
-
-	console.log(notes)
 
 	const filteredNotes = useMemo(() => {
 		return notes.filter((note) => {
@@ -44,7 +32,7 @@ function NoteList({ availableTags, notes }: NoteListProps) {
 					))
 			)
 		})
-	}, [title, selectedTags, notes])
+	}, [title, selectedTags])
 
 	return (
 		<>
@@ -99,17 +87,12 @@ function NoteList({ availableTags, notes }: NoteListProps) {
 			</Form>
 
 			<Row xs={1} sm={2} lg={3} xl={4} className="g-3">
-<<<<<<< HEAD
-				{filteredNote.map((note: Note) => {
-					return <div>{note.title}</div>
-=======
 				{filteredNotes.map((note) => {
 					return (
 						<Col key={note.id}>
 							<NoteCard id={note.id} title={note.title} tags={note.tags} />
 						</Col>
 					)
->>>>>>> 978658e7c57743f3bb814e84acc0f5961ad930a7
 				})}
 			</Row>
 		</>
@@ -118,7 +101,7 @@ function NoteList({ availableTags, notes }: NoteListProps) {
 
 export default NoteList
 
-function NoteCard({ id, title, tags }: SimpliedNote) {
+function NoteCard({ id, title, tags }: SimplifiedNote) {
 	return (
 		<Card
 			as={Link}
