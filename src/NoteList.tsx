@@ -2,24 +2,26 @@ import React, { useMemo, useState } from "react"
 import { Badge, Button, Card, Col, Form, Row, Stack } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import ReactSelect from "react-select"
-import { Note, Tag } from "./App"
+import { Tag } from "./App"
 
 import styles from "./NoteList.module.css"
 
-type SimplifiedNote = {
+type simplifiedNote = {
 	id: string
-	title: string
 	tags: Tag[]
+	title: string
 }
 
 type NoteListProps = {
 	availableTags: Tag[]
-	notes: SimplifiedNote[]
+	notes: simplifiedNote[]
 }
 
 function NoteList({ availableTags, notes }: NoteListProps) {
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([])
 	const [title, setTitle] = useState<string>("")
+
+	console.log(notes)
 
 	const filteredNotes = useMemo(() => {
 		return notes.filter((note) => {
@@ -32,7 +34,7 @@ function NoteList({ availableTags, notes }: NoteListProps) {
 					))
 			)
 		})
-	}, [title, selectedTags])
+	}, [title, selectedTags, notes])
 
 	return (
 		<>
@@ -101,7 +103,7 @@ function NoteList({ availableTags, notes }: NoteListProps) {
 
 export default NoteList
 
-function NoteCard({ id, title, tags }: SimplifiedNote) {
+function NoteCard({ id, title, tags }: simplifiedNote) {
 	return (
 		<Card
 			as={Link}
