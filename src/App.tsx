@@ -82,12 +82,38 @@ function App() {
 		setTags((prev) => [...prev, tag])
 	}
 
+	function onDeleteTags(id: string) {
+		console.log(id)
+		setTags((prevtags) => {
+			return tags.filter((tag) => tag.id !== id)
+		})
+	}
+
+	function onUpdateTags(id: string, label: string) {
+		setTags((prevTags) => {
+			return prevTags.map((tag) => {
+				if (tag.id === id) {
+					return { ...tag, label }
+				} else {
+					return tag
+				}
+			})
+		})
+	}
+
 	return (
 		<Container className="my-4">
 			<Routes>
 				<Route
 					path="/"
-					element={<NoteList availableTags={tags} notes={notesWithTags} />}
+					element={
+						<NoteList
+							availableTags={tags}
+							notes={notesWithTags}
+							onDeleteTags={onDeleteTags}
+							onUpdateTags={onUpdateTags}
+						/>
+					}
 				/>
 				<Route
 					path="/new"
