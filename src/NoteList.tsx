@@ -1,20 +1,5 @@
-<<<<<<< HEAD
 import { useState } from "react"
 import { Badge, Button, Card, Col, Form, Row, Stack } from "react-bootstrap"
-=======
-import React, { useMemo, useState } from "react"
-import {
-	Badge,
-	Button,
-	Card,
-	Col,
-	Form,
-	FormControl,
-	Modal,
-	Row,
-	Stack,
-} from "react-bootstrap"
->>>>>>> 667f1dd08275f72fca1350088353b14395fce2fd
 import { Link } from "react-router-dom"
 import Select from "react-select"
 import { Note, Tag } from "./App"
@@ -93,13 +78,6 @@ function NoteList({ notes, availableTags }: NoteListProps) {
 					)
 				})}
 			</Row>
-			<EditTagsModal
-				show={isEditTagsModalOpen}
-				handleClose={() => setEditTagsModalOpen(false)}
-				availableTags={availableTags}
-				onDeleteTags={onDeleteTags}
-				onUpdateTags={onUpdateTags}
-			/>
 		</>
 	)
 }
