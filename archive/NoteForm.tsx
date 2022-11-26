@@ -1,24 +1,30 @@
-import React, { FormEvent, useRef, useState } from "react"
-import { Row, Col, Form, Stack, Button } from "react-bootstrap"
+import React, { useState } from "react"
+import { useRef, FormEvent } from "react"
+import { Button, Col, Form, Row, Stack } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import CreatableReactSelect from "react-select/creatable"
+import { v4 as uuidV4 } from "uuid"
 import { NoteData, Tag } from "./App"
 
-import { v4 as uuidV4 } from "uuid"
-
 type NoteFormProps = {
-	availableTags: Tag[]
 	onSubmit: (data: NoteData) => void
 	onAddTag: (data: Tag) => void
-}
+	availableTags: Tag[]
+	note?: NoteData
+} & Partial<NoteData>
 
-function NoteForm({ availableTags, onSubmit, onAddTag }: NoteFormProps) {
-	const [selectedTags, setSelectedTags] = useState<Tag[]>([])
-
+function NoteForm({
+	onSubmit,
+	onAddTag,
+	availableTags,
+	note = { title: "", tags: [], markdown: "" },
+}: NoteFormProps) {
 	const titleRef = useRef<HTMLInputElement>(null)
 	const markdownRef = useRef<HTMLTextAreaElement>(null)
 
+	const [selectedTags, setSelectedTags] = useState<Tag[]>(note.tags)
 	const navigate = useNavigate()
+
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault()
 
@@ -28,16 +34,16 @@ function NoteForm({ availableTags, onSubmit, onAddTag }: NoteFormProps) {
 			tags: selectedTags,
 		})
 
-		navigate("/")
+		navigate("..")
 	}
 	return (
 		<Form onSubmit={handleSubmit}>
-			<Stack gap={3}>
+			<Stack gap={4}>
 				<Row>
 					<Col>
 						<Form.Group controlId="title">
 							<Form.Label>Title</Form.Label>
-							<Form.Control ref={titleRef} type="text" required />
+							<Form.Control ref={titleRef} required defaultValue={note.title} />
 						</Form.Group>
 					</Col>
 					<Col>
@@ -45,7 +51,7 @@ function NoteForm({ availableTags, onSubmit, onAddTag }: NoteFormProps) {
 							<Form.Label>Tags</Form.Label>
 							<CreatableReactSelect
 								onCreateOption={(label) => {
-									const newTag = { id: uuidV4(), label: label }
+									const newTag = { id: uuidV4(), label }
 									onAddTag(newTag)
 									setSelectedTags((prev) => [...prev, newTag])
 								}}
@@ -67,17 +73,26 @@ function NoteForm({ availableTags, onSubmit, onAddTag }: NoteFormProps) {
 						</Form.Group>
 					</Col>
 				</Row>
+
 				<Form.Group controlId="markdown">
 					<Form.Label>Body</Form.Label>
-					<Form.Control required ref={markdownRef} as="textarea" rows={15} />
+					<Form.Control
+						defaultValue={note.markdown}
+						required
+						as="textarea"
+						ref={markdownRef}
+						rows={15}
+					/>
 				</Form.Group>
 
-				<Stack gap={1} direction="horizontal" className="justify-content-end">
-					<Button variant="primary" type="submit">
+				<Stack direction="horizontal" gap={2} className="justify-content-end">
+					<Button type="submit" variant="primary">
 						Save
 					</Button>
 					<Link to="..">
-						<Button variant="outline-secondary">Cancel</Button>
+						<Button type="button" variant="outline-secondary">
+							Cancel
+						</Button>
 					</Link>
 				</Stack>
 			</Stack>

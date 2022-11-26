@@ -3,21 +3,21 @@ import { NoteData, Tag } from "./App"
 import NoteForm from "./NoteForm"
 
 type NewNoteProps = {
-	availableTags: Tag[]
 	onSubmit: (data: NoteData) => void
 	onAddTag: (data: Tag) => void
+	availableTags: Tag[]
 }
 
-function NewNote({ availableTags, onSubmit, onAddTag }: NewNoteProps) {
+function NewNote({ onSubmit, onAddTag, availableTags }: NewNoteProps) {
 	return (
-		<div>
-			<h1>New note</h1>
+		<>
+			<h1 className="mb-4">New Note</h1>
 			<NoteForm
-				availableTags={availableTags}
 				onSubmit={onSubmit}
 				onAddTag={onAddTag}
+				availableTags={availableTags}
 			/>
-		</div>
+		</>
 	)
 }
 

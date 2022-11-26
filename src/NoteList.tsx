@@ -1,98 +1,79 @@
-import React, { useMemo, useState } from "react"
+import { useState } from "react"
 import { Badge, Button, Card, Col, Form, Row, Stack } from "react-bootstrap"
 import { Link } from "react-router-dom"
-import ReactSelect from "react-select"
-import { Tag } from "./App"
-
-import styles from "./NoteList.module.css"
-
-type simplifiedNote = {
-	id: string
-	tags: Tag[]
-	title: string
-}
+import Select from "react-select"
+import { Note, Tag } from "./App"
 
 type NoteListProps = {
+	notes: Note[]
 	availableTags: Tag[]
-	notes: simplifiedNote[]
 }
 
-function NoteList({ availableTags, notes }: NoteListProps) {
+function NoteList({ notes, availableTags }: NoteListProps) {
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([])
-	const [title, setTitle] = useState<string>("")
-
-	console.log(notes)
-
-	const filteredNotes = useMemo(() => {
-		return notes.filter((note) => {
-			return (
-				(title === "" ||
-					note.title.toLowerCase().includes(title.toLowerCase())) &&
-				(selectedTags.length === 0 ||
-					selectedTags.every((tag) =>
-						note.tags.some((noteTag) => tag.id === noteTag.id)
-					))
-			)
-		})
-	}, [title, selectedTags, notes])
-
+	const [title, setTitle] = useState("")
+	const filteredNotes = notes.filter((note) => true)
 	return (
 		<>
-			<Row className="align-items-center mb-4">
+			<Row className="mb-4">
 				<Col>
 					<h1>Notes</h1>
 				</Col>
 				<Col xs="auto">
-					<Stack gap={2} direction="horizontal">
+					<Stack direction="horizontal" gap={2}>
 						<Link to="/new">
 							<Button variant="primary">Create</Button>
 						</Link>
-						<Button variant="outline-secondary">Edits Tags</Button>
+						<Button variant="outline-secondary">Edit Tags</Button>
 					</Stack>
 				</Col>
 			</Row>
-			<Form>
-				<Row className="my-4">
+			<Form className="mb-4">
+				<Row>
 					<Col>
 						<Form.Group controlId="title">
 							<Form.Label>Title</Form.Label>
 							<Form.Control
-								type="text"
 								value={title}
 								onChange={(e) => setTitle(e.target.value)}
+								type="text"
+								placeholder="Search notes"
 							/>
 						</Form.Group>
 					</Col>
 					<Col>
-						<Form.Group controlId="tags">
+						<Form.Group>
 							<Form.Label>Tags</Form.Label>
-							<ReactSelect
+							<Select
 								value={selectedTags.map((tag) => {
-									return { label: tag.label, value: tag.id }
-								})}
-								options={availableTags.map((tag) => {
 									return { label: tag.label, value: tag.id }
 								})}
 								onChange={(tags) => {
 									setSelectedTags(
 										tags.map((tag) => {
-											return { label: tag.label, id: tag.value }
+											return { id: tag.value, label: tag.label }
 										})
 									)
 								}}
 								isMulti
-								placeholder="Chọn tag..."
+								options={availableTags.map((tag) => {
+									return { label: tag.label, value: tag.id }
+								})}
 							/>
 						</Form.Group>
 					</Col>
 				</Row>
 			</Form>
-
 			<Row xs={1} sm={2} lg={3} xl={4} className="g-3">
 				{filteredNotes.map((note) => {
 					return (
 						<Col key={note.id}>
-							<NoteCard id={note.id} title={note.title} tags={note.tags} />
+							<NoteCard
+								key={note.id}
+								title={note.title}
+								tags={note.tags}
+								id={note.id}
+							/>
 						</Col>
 					)
 				})}
@@ -103,34 +84,32 @@ function NoteList({ availableTags, notes }: NoteListProps) {
 
 export default NoteList
 
+type simplifiedNote = {
+	id: string
+	title: string
+	tags: Tag[]
+}
+
 function NoteCard({ id, title, tags }: simplifiedNote) {
 	return (
-		<Card
-			as={Link}
-			to={`/${id}`}
-			className={`h-100 text-reset text-decoration-none ${styles.card}`}
-		>
-			<Card.Body>
-				<Stack
-					gap={2}
-					className="align-items-center justify-content-center h-100"
-				>
-					<span className="fs-5">{title}</span>
-					{tags.length > 0 && (
+		<>
+			<Card as={Link} to={`/${id}`} className="text-decoration-none text-reset">
+				<Card.Body>
+					<Stack gap={2} className="align-items-center">
+						<span className="fs-5">{title}</span>
 						<Stack
-							gap={1}
 							direction="horizontal"
-							className="justify-content-center flex-wrap"
+							className="flex-wrap align-items-center justify-content-center"
+							gap={1}
 						>
-							{tags.map((tag) => (
-								<Badge key={tag.id} className="text-truncate">
-									{tag.label}
-								</Badge>
-							))}
+							{tags.length > 0 &&
+								tags.map((tag) => {
+									return <Badge key={tag.id}>{tag.label}</Badge>
+								})}
 						</Stack>
-					)}
-				</Stack>
-			</Card.Body>
-		</Card>
+					</Stack>
+				</Card.Body>
+			</Card>
+		</>
 	)
 }
