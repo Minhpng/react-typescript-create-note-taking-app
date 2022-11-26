@@ -7,12 +7,21 @@ import { Note, Tag } from "./App"
 type NoteListProps = {
 	notes: Note[]
 	availableTags: Tag[]
+	onUpdateTag: (id: string, label: string) => void
 }
 
-function NoteList({ notes, availableTags }: NoteListProps) {
+function NoteList({ notes, availableTags, onUpdateTag }: NoteListProps) {
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([])
 	const [title, setTitle] = useState("")
-	const filteredNotes = notes.filter((note) => true)
+	const filteredNotes = notes.filter((note) => {
+		return (
+			(title == "" || note.title.includes(title)) &&
+			(selectedTags.length === 0 ||
+				selectedTags.every((tag) =>
+					note.tags.some((noteTag) => tag.id === noteTag.id)
+				))
+		)
+	})
 	return (
 		<>
 			<Row className="mb-4">
@@ -78,6 +87,7 @@ function NoteList({ notes, availableTags }: NoteListProps) {
 					)
 				})}
 			</Row>
+			<EditTag availableTags={availableTags} onUpdateTag={onUpdateTag} />
 		</>
 	)
 }
@@ -111,5 +121,28 @@ function NoteCard({ id, title, tags }: simplifiedNote) {
 				</Card.Body>
 			</Card>
 		</>
+	)
+}
+
+type EditTagProps = {
+	availableTags: Tag[]
+	onUpdateTag: (id: string, label: string) => void
+}
+
+function EditTag({ availableTags, onUpdateTag }: EditTagProps) {
+	return (
+		<Form>
+			<Stack gap={2}>
+				{availableTags.map((tag) => {
+					return (
+						<Form.Control
+							key={tag.id}
+							defaultValue={tag.label}
+							onChange={(e) => onUpdateTag(tag.id, e.target.value)}
+						/>
+					)
+				})}
+			</Stack>
+		</Form>
 	)
 }
