@@ -39,60 +39,13 @@ function App() {
 		})
 	}
 
-<<<<<<< HEAD
-=======
-	function onDeleteNote(id: string) {
-		setNotes((prev) => {
-			const newNote = prev.filter((note) => note.id !== id)
-			console.log(newNote)
-
-			return [...newNote]
-		})
-	}
-
-	function addTag(tag: Tag) {
-		setTags((prev) => [...prev, tag])
-	}
-
-	function onDeleteTags(id: string) {
-		console.log(id)
-		setTags((prevtags) => {
-			return tags.filter((tag) => tag.id !== id)
-		})
-	}
-
-	function onUpdateTags(id: string, label: string) {
-		setTags((prevTags) => {
-			return prevTags.map((tag) => {
-				if (tag.id === id) {
-					return { ...tag, label }
-				} else {
-					return tag
-				}
-			})
-		})
-	}
-
->>>>>>> 667f1dd08275f72fca1350088353b14395fce2fd
 	return (
 		<Container className="my-4">
 			<Routes>
 				<Route
 					path="/"
-<<<<<<< HEAD
 					element={<NoteList notes={notes} availableTags={tags} />}
 				></Route>
-=======
-					element={
-						<NoteList
-							availableTags={tags}
-							notes={notesWithTags}
-							onDeleteTags={onDeleteTags}
-							onUpdateTags={onUpdateTags}
-						/>
-					}
-				/>
->>>>>>> 667f1dd08275f72fca1350088353b14395fce2fd
 				<Route
 					path="/new"
 					element={
